@@ -1,0 +1,31 @@
+package models;
+
+import java.lang.reflect.Field;
+
+public class NotNullValidator {
+    public static void validateNotNullFields(Object obj) throws IllegalAccessException {
+        Field[] fields = obj.getClass().getDeclaredFields();
+
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(NotNull.class)) {
+                field.setAccessible(true);
+                Object value = field.get(obj);
+
+                if (value == null) {
+                    System.out.println("Поле " + field.getName() + " не може бути null!");
+                } else {
+                    System.out.println("Поле " + field.getName() + " заповнене.");
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws IllegalAccessException {
+        Person person = new Person("Іван", null, 25);
+
+        validateNotNullFields(person);
+
+        Person person2 = new Person("Марія", "maria@example.com", 30);
+        validateNotNullFields(person2);
+    }
+}
